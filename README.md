@@ -2,49 +2,63 @@
 
 > **Conversation first. Learning happens invisibly.**
 
-AI English is a voice-first English learning product built around enjoyable, natural conversation. The user should open the product because they want to talk, continue a relationship, or experience a story—not because they feel obligated to complete a lesson.
+AI English is a **mobile-first, voice-first English conversation app for iOS and Android**. The user should open the app because they want to talk, continue a relationship, or experience a story—not because they feel obligated to complete a lesson.
 
 GPT-Live-1 provides the full-duplex voice layer. The differentiated product is the system built around it: persistent conversation continuity, a longitudinal learner model, adaptive language targets, and lightweight post-session feedback.
 
+## Product surface
+
+The primary product is a native-feeling mobile app distributed to iOS and Android users.
+
+- **Mobile:** React Native + Expo, with native/development-build capabilities added where live audio requires them.
+- **Backend:** secure application APIs for Live-session creation, persistence, learner analysis, memory, and analytics.
+- **Web:** not the primary user product. Web code may be used for internal/admin tooling or retained as technical reference.
+
 ## North-star experience
 
-1. Start talking with almost no setup.
+1. Open the phone app and start talking with almost no setup.
 2. The companion waits naturally, handles interruptions, and prioritizes conversational flow.
 3. Hidden language targets are woven into the conversation instead of presented as exercises.
 4. The session is analyzed after the fact.
 5. Later conversations reuse useful context and reinforce language the learner is acquiring.
+6. Mobile-native entry points such as notifications can bring the user back into a meaningful conversation.
 
 ## MVP
 
 The first MVP deliberately contains only:
 
+- iOS and Android application shell,
 - one persistent AI companion,
-- GPT-Live-1 browser voice conversation,
+- GPT-Live-1 real-time voice conversation on a physical mobile device,
+- microphone/audio permission and lifecycle handling,
 - transcript/session capture,
 - a lightweight learner profile,
 - 1-3 adaptive language targets per session,
 - a short post-session recap,
-- analytics for activation, conversation depth, retention, learning evidence, and AI cost.
+- analytics for activation, conversation depth, retention, learning evidence, reliability, and AI cost.
 
 Large lesson catalogs, multiple characters, social features, open-world simulation, and heavy gamification are explicitly deferred until the core conversation loop retains users.
 
 ## Canonical docs
 
 - [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md) — final-state product vision and product principles
-- [`docs/MVP_SPEC.md`](docs/MVP_SPEC.md) — MVP scope and acceptance criteria
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — initial technical architecture
+- [`docs/MVP_SPEC.md`](docs/MVP_SPEC.md) — mobile MVP scope and acceptance criteria
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — mobile-first technical architecture
 - [`docs/METRICS.md`](docs/METRICS.md) — validation metrics and decision rules
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged path from prototype to the final experience
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — staged path from mobile prototype to the final experience
+- [`docs/MOBILE_FIRST_DECISION.md`](docs/MOBILE_FIRST_DECISION.md) — record of the Web → mobile product decision
 
 ## Current development state
 
-Product foundation is defined on `main`.
+The canonical product direction on `main` is mobile-first.
 
-Active implementation branch:
+The previous browser prototype branch, `feat/phase-1-voice-spine`, is retained only as a technical reference for GPT-Live-1 session-flow work and is not the product implementation path.
 
-`feat/phase-1-voice-spine`
+The next implementation milestone is:
 
-The current technical milestone is a reliable 10-minute browser conversation using GPT-Live-1 over WebRTC, with graceful session shutdown and enough event capture to support transcripts and learner analysis next.
+> **Open AI English on an iOS or Android physical device and sustain a natural 10-minute GPT-Live-1 English conversation without developer intervention.**
+
+After that, build transcript capture, persistent companion memory, and the invisible learner loop.
 
 ## Development rule
 
