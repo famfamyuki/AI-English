@@ -1,39 +1,42 @@
 # Architecture
 
-Status: Initial technical direction
+Status: Canonical mobile-first technical direction
 Date: 2026-09-14
 
 ## Goals
 
+- Make iOS and Android the primary product surfaces.
 - Keep the live voice path simple and low-latency.
-- Never expose the OpenAI API key to the browser.
 - Separate natural conversation from deeper learner analysis.
-- Make transcripts and learner evidence first-class data.
-- Keep the first deployment small enough to iterate quickly.
+- Make transcripts, memory, and learner evidence first-class data.
+- Validate real-device audio reliability before building complex learning features.
 
 ## Proposed stack
 
-- **Frontend:** Next.js App Router + TypeScript
-- **Hosting:** Vercel
+- **Mobile client:** React Native + TypeScript
+- **Mobile framework/tooling:** Expo
+- **Device validation:** iOS and Android physical-device testing
 - **Live voice:** GPT-Live-1
-- **Browser transport:** WebRTC where supported by the GPT-Live-1 API flow
-- **Backend reasoning:** an OpenAI text model via delegated/background analysis for learner-model and recap work
-- **Database:** PostgreSQL (provider to be selected during implementation)
-- **Auth:** lightweight managed auth (provider to be selected)
+- **Live transport:** current supported mobile-compatible real-time transport, validated early on device
+- **Application backend:** TypeScript service/API layer
+- **Backend hosting:** Vercel or another managed server platform appropriate for API workloads
+- **Backend reasoning:** OpenAI text/reasoning model for learner analysis, memory compaction, recap, and conversation planning
+- **Database:** PostgreSQL
+- **Auth:** managed authentication provider, selected during implementation
 - **Analytics:** PostHog or equivalent event analytics
 
-The exact SDK/API surface must follow the current OpenAI GPT-Live-1 documentation at implementation time.
+The exact Live API, SDK, WebRTC/native-module requirements, and mobile audio-session behavior must be verified against the current implementation contract before locking the transport layer.
 
 ## Logical architecture
 
 ```text
-Browser
+iOS / Android app
   |
-  | microphone/audio + live events
+  | microphone + live audio + session events
   v
 GPT-Live-1 voice session
   |
-  | transcript / response text / session events
+  | transcript / response / session events
   v
 Application backend
   |-- session persistence
@@ -41,26 +44,40 @@ Application backend
   |-- learner evidence extraction
   |-- conversation planning
   |-- recap generation
+  |-- analytics / cost events
   v
 PostgreSQL
 ```
 
-## Separation of responsibilities
+## Mobile client responsibilities
 
-### Live voice layer
+The app is responsible for:
+
+- onboarding and profile UX,
+- microphone permission UX,
+- audio input/output state,
+- real-time session UI,
+- device/network error states,
+- foreground/background lifecycle behavior,
+- recap and progress surfaces,
+- later notification/deep-link entry points.
+
+Keep business logic for long-term learner analysis and memory out of the client where practical.
+
+## Live voice layer
 
 Responsible for:
 
 - natural turn-taking,
 - audio input/output,
 - interruptions,
-- conversational tone/pace,
+- conversational tone and pace,
 - short-term session context,
 - executing the current conversation plan without sounding scripted.
 
 It should not do expensive longitudinal learner analysis inline unless needed for the immediate conversation.
 
-### Backend learning layer
+## Backend learning layer
 
 Responsible for:
 
@@ -69,9 +86,8 @@ Responsible for:
 - target selection,
 - memory compaction,
 - recap generation,
-- longitudinal progress calculations.
-
-This work can happen at session boundaries or through delegated reasoning when required.
+- longitudinal progress calculations,
+- building compact context for the next live session.
 
 ## Core entities
 
@@ -85,6 +101,15 @@ This work can happen at session boundaries or through delegated reasoning when r
 - interests
 - createdAt
 
+### DeviceInstallation
+
+- id
+- userId
+- platform
+- appVersion
+- notificationState
+- lastSeenAt
+
 ### Session
 
 - id
@@ -92,6 +117,8 @@ This work can happen at session boundaries or through delegated reasoning when r
 - startedAt
 - endedAt
 - durationSeconds
+- platform
+- appVersion
 - conversationPlanId
 - summary
 - qualitySignals
@@ -159,36 +186,55 @@ Possible evidence types include observed, understood, prompted, produced, self-c
 
 ### Before session
 
-1. Load user profile and recent memory.
-2. Load learner targets due for reinforcement.
-3. Build a compact conversation plan.
-4. Create the GPT-Live-1 session with character/style instructions and the plan.
+1. App confirms permissions and audio readiness.
+2. Backend loads user profile and recent memory.
+3. Backend loads learner targets due for reinforcement.
+4. Backend builds a compact conversation plan.
+5. App establishes the GPT-Live-1 session using server-issued session material.
 
 ### During session
 
 1. Stream microphone/audio.
-2. Capture transcripts and response text.
+2. Capture transcript and response/session events.
 3. Persist durable events asynchronously where practical.
-4. Do not interrupt fluency for routine correction.
-5. Allow explicit teaching only when requested or when misunderstanding blocks the conversation.
+4. Preserve fluency rather than interrupting for routine correction.
+5. Handle device audio interruptions and connectivity failures explicitly.
 
 ### After session
 
-1. Finalize transcript.
-2. Generate a memory summary.
-3. Extract learner evidence.
-4. Update target confidence and review timing.
-5. Generate the short recap.
-6. Emit analytics events.
+1. Close/finalize the live session.
+2. Finalize transcript.
+3. Generate a memory summary.
+4. Extract learner evidence.
+5. Update target confidence and review timing.
+6. Generate the short recap.
+7. Emit analytics and cost events.
+
+## Mobile reliability rules
+
+The first technical milestone must test on real devices, not only simulator/emulator environments.
+
+The client must have explicit states for:
+
+- microphone permission unavailable,
+- connecting,
+- connected,
+- interrupted,
+- reconnecting where safe,
+- ending,
+- ended,
+- terminal failure.
+
+Do not treat a browser proof of concept as proof of mobile audio reliability.
 
 ## Privacy and data rules
 
 - Store only data needed for product value and learning adaptation.
 - Make transcript retention explicit to users.
 - Provide deletion controls before broad public launch.
-- Keep secrets server-side.
-- Do not treat inferred personal facts as learning goals unless the user intentionally provides them.
+- Keep sensitive server credentials out of the mobile bundle.
+- Do not treat inferred personal facts as learning goals unless intentionally provided by the user.
 
 ## Cost rule
 
-GPT-Live-1 voice time is a variable cost, so the application must measure cost per active retained user from the first private test. Optimize only after measuring whether longer conversations improve retention and learning value.
+Voice time is a variable cost. Measure cost per session, per conversation minute, and per retained user from the first private mobile test. Optimize only after measuring whether longer conversations improve retention and learning value.
