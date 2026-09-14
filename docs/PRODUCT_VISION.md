@@ -5,13 +5,21 @@ Date: 2026-09-14
 
 ## One-sentence vision
 
-Build an English environment people voluntarily return to because the conversations, relationships, and stories are enjoyable; language learning happens continuously in the background.
+Build a mobile English environment people voluntarily return to because the conversations, relationships, and stories are enjoyable; language learning happens continuously in the background.
 
 ## Core principle
 
 > **Conversation first. Learning happens invisibly.**
 
 AI English is not a conventional lesson app with an AI tutor added to it. The primary product is the conversation experience itself.
+
+## Primary product surface
+
+AI English is designed first as an iOS and Android app.
+
+Mobile is not only a packaging choice. It supports the intended behavior: the user can open the app in a spare moment, put on headphones, talk naturally, return through a meaningful notification, and build an ongoing relationship with the companion.
+
+A browser consumer experience is not a product requirement. Web may later support internal tools, account management, marketing, or complementary experiences.
 
 ## User transformation
 
@@ -88,7 +96,7 @@ The defensible system is the combination of:
 3. adaptive conversation planning,
 4. a high-quality content/character system,
 5. longitudinal learning data,
-6. a product loop optimized for voluntary speaking time rather than lesson completion.
+6. a mobile product loop optimized for voluntary speaking time rather than lesson completion.
 
 ## North-star metric
 
