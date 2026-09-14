@@ -1,6 +1,6 @@
 # Metrics and Validation
 
-Status: Initial experiment framework
+Status: Canonical mobile experiment framework
 Date: 2026-09-14
 
 ## North-star metric
@@ -16,11 +16,12 @@ This metric combines the two things the product must achieve: users return volun
 A new user is activated when they:
 
 1. complete lightweight onboarding,
-2. start a live voice session,
-3. remain in conversation for at least 5 minutes,
-4. finish the session and view the recap.
+2. grant required microphone access,
+3. start a live voice session,
+4. remain in conversation for at least 5 minutes,
+5. finish the session and view the recap.
 
-Track activation rate and drop-off at each step.
+Track activation rate and drop-off at each step, split by iOS and Android when useful.
 
 ### Conversation depth
 
@@ -33,6 +34,21 @@ Track:
 - sessions reaching 5 / 10 / 20 minutes,
 - interruption/error rate where measurable.
 
+### Mobile reliability
+
+Track:
+
+- microphone permission denial rate,
+- live-session connection success rate,
+- time to connected state,
+- unexpected session termination rate,
+- recoverable network interruption rate,
+- app crash-free session rate,
+- foreground/background interruption failures,
+- device/OS/version for reliability diagnosis.
+
+Reliability metadata must not include raw private conversation content.
+
 ### Retention
 
 Track:
@@ -41,7 +57,8 @@ Track:
 - D7 return,
 - weekly returning users,
 - number of voice sessions per retained user,
-- conversation minutes per retained user.
+- conversation minutes per retained user,
+- notification-driven returns later, once notifications are introduced.
 
 For a small private beta, individual qualitative behavior matters more than statistically noisy percentage changes.
 
@@ -55,7 +72,7 @@ Track longitudinally rather than claiming instant mastery:
 - self-corrections,
 - time between target exposure and spontaneous reuse.
 
-A key learning signal is: **language first encountered/modelled by the AI later appears spontaneously in the learner's own speech.**
+A key learning signal is: **language first encountered or modelled by the AI later appears spontaneously in the learner's own speech.**
 
 ## Experience-quality questions
 
@@ -70,36 +87,40 @@ Examples:
 
 ## Critical validation thresholds
 
-Do not treat these as permanent KPI targets; they are early decision rules.
-
 The concept is promising if private testers show all of the following patterns:
 
-- several users voluntarily start a second session without being asked,
-- 10+ minute sessions occur naturally,
+- several users voluntarily start a second session,
+- 10+ minute sessions occur naturally on physical mobile devices,
 - users describe the experience primarily as conversation rather than testing,
 - returning sessions show evidence of remembered context,
-- at least some learning targets are later produced spontaneously.
+- at least some learning targets are later produced spontaneously,
+- mobile reliability is good enough that technical friction is not the dominant reason sessions end.
 
 ## Cost metrics
 
 Measure from day one:
 
-- GPT-Live voice cost per session,
+- live voice cost per session,
 - backend model cost per session,
 - total AI cost per conversation minute,
 - AI cost per activated user,
 - AI cost per retained weekly user.
 
-GPT-Live-1 launched at $0.05/minute for the frontend voice layer, with backend model/tool usage charged separately. Pricing should be rechecked before any monetization decision.
+Recheck current provider pricing before any monetization decision.
 
 ## Events
 
 Minimum analytics event set:
 
+- app_opened
 - onboarding_started
 - onboarding_completed
+- microphone_permission_requested
+- microphone_permission_granted
+- microphone_permission_denied
 - live_session_requested
 - live_session_connected
+- live_session_interrupted
 - live_session_failed
 - live_session_ended
 - recap_generated
@@ -109,11 +130,11 @@ Minimum analytics event set:
 - target_produced
 - return_session_started
 
-Each event should include stable identifiers and only the metadata needed for analysis; avoid sending raw sensitive transcript content to general analytics tools.
+Each event should include stable identifiers and only metadata needed for analysis. Do not send raw sensitive transcript content to general analytics tools.
 
 ## Decision discipline
 
-Do not optimize for vanity metrics such as page views or account creation before the core loop works.
+Do not optimize for vanity metrics such as installs or account creation before the core loop works.
 
 For every experiment record:
 
