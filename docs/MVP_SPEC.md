@@ -1,139 +1,108 @@
 # MVP Specification
 
-Status: Proposed build target
+Status: Canonical mobile build target
 Date: 2026-09-14
 
 ## MVP question
 
-Can we make a learner voluntarily return to speak English with an AI companion because the interaction itself is enjoyable, while measurable language learning happens in the background?
+Can learners voluntarily return to a mobile app because talking with an AI companion is enjoyable, while English learning happens in the background?
 
 ## Target user
 
-Initial target: Japanese adult learners who can understand basic English but struggle to sustain spontaneous spoken conversation.
+Japanese adult learners who understand basic English but struggle to sustain spontaneous spoken conversation. Initial target range: roughly CEFR A2-B2.
 
-The MVP should work best for roughly CEFR A2-B2 users. It must not depend on exact CEFR placement to start.
+## Product surface
+
+The MVP is an iOS and Android mobile application. A browser consumer app is not required.
+
+Preferred client direction:
+
+- React Native
+- Expo
+- native capabilities where real-time audio or platform behavior requires them
 
 ## Core loop
 
-1. User opens the web app.
-2. User starts a live English voice session with one persistent companion.
-3. The companion remembers prior sessions and adapts pace/difficulty.
-4. The conversation engine carries 1-3 hidden language targets into the session.
-5. Transcript and interaction metadata are captured.
+1. Open the mobile app.
+2. Start a live English voice session with one persistent companion.
+3. The companion remembers prior sessions and adapts pace and difficulty.
+4. The conversation carries 1-3 hidden language targets.
+5. Transcript and session metadata are captured.
 6. The session ends with a short recap.
-7. Learner-model evidence is updated.
-8. The next session reuses relevant context and selected targets.
+7. Learner evidence is updated.
+8. The next session reuses relevant memory and learning targets.
 
 ## In scope
 
-### 1. Onboarding
+### Mobile onboarding
 
-Collect only what is needed to create a good first conversation:
+Collect only preferred name, approximate comfort level, interests, English goal, correction preference, and microphone permission when needed. Do not begin with a long placement test.
 
-- preferred name,
-- approximate comfort level,
-- interests/topics,
-- main reason for improving English,
-- correction preference: minimal / balanced / active.
+### One persistent AI companion
 
-Do not start with a long placement test.
+The MVP has one default companion with a stable personality, continuity across sessions, adjustable pace and difficulty, and natural conversational behavior.
 
-### 2. One persistent AI companion
-
-The MVP has one default character, not a character marketplace.
-
-The companion should have:
-
-- stable personality,
-- conversational warmth without excessive praise,
-- memory of meaningful prior topics,
-- adjustable speaking speed and language difficulty,
-- a reason to continue conversations over time.
-
-### 3. GPT-Live-1 voice session
+### GPT-Live-1 mobile voice
 
 Requirements:
 
-- browser microphone input,
-- low-latency audio conversation,
-- natural interruption/turn behavior,
-- transcript capture,
-- response text capture,
-- session start/end state,
-- graceful fallback/error state.
+- physical-device microphone input
+- low-latency two-way audio
+- natural turn-taking and interruption behavior
+- session and transcript event capture
+- clean start and end states
+- microphone and audio permission handling
+- network and error handling
+- foreground and background lifecycle handling
 
-### 4. Learner model v0
+The transport and SDK approach must follow the current GPT-Live-1 contract and be validated on real devices.
 
-Track evidence for:
+### Learner model v0
 
-- vocabulary/phrases understood,
-- vocabulary/phrases produced,
-- recurring grammar patterns,
-- hesitation/repair markers that can be reliably inferred from available session data,
-- target expressions currently being reinforced.
+Track evidence for vocabulary and phrases understood or produced, recurring grammar patterns, reliable hesitation or repair signals, and expressions currently being reinforced. Use confidence and evidence rather than a binary mastered flag.
 
-Every item should have confidence/evidence rather than a hard mastered boolean.
+### Conversation planner v0
 
-### 5. Conversation planner v0
+Before a session, select conversation context, 1-3 language targets, natural opportunities to elicit them, difficulty guidance, and topics not to repeat too soon.
 
-Before a session, produce:
+### Session recap
 
-- conversation context,
-- 1-3 target expressions or structures,
-- one or two natural opportunities to elicit them,
-- difficulty guidance,
-- topics to avoid repeating too soon.
+Show conversation duration, useful expressions from the session, one evidence-based strength, one high-value improvement point, and optional short replay or rephrase practice.
 
-Targets must not make the conversation feel scripted.
+### Persistence
 
-### 6. Session recap
-
-Show a short result page containing:
-
-- conversation duration,
-- useful expressions encountered,
-- one positive observation based on evidence,
-- one high-value improvement point,
-- optional replay/rephrase examples.
-
-### 7. Persistence
-
-Persist at minimum:
-
-- user profile,
-- sessions,
-- transcript segments,
-- learner evidence,
-- memory summaries,
-- target history.
+Persist user profile, sessions, transcript segments, learner evidence, memory summaries, and target history.
 
 ## Explicitly out of scope for MVP
 
-- multiple characters,
-- open-world simulation,
-- social features,
-- live human teachers,
-- native iOS/Android apps,
-- full pronunciation scoring suite,
-- large curriculum/lesson catalog,
-- streak economy,
-- achievements/badges beyond minimal experimentation,
-- payments until core retention is understood.
+- multiple characters
+- open-world simulation
+- social features
+- live human teachers
+- browser-first consumer product
+- full pronunciation scoring suite
+- large lesson catalog
+- heavy streak or badge systems
+- payments before retention and AI cost are understood
 
 ## Acceptance criteria
 
-The first usable MVP is complete when a test user can:
+The MVP is complete when a tester can:
 
-1. create a profile,
-2. start a browser voice conversation,
-3. speak for at least 10 minutes without manual developer intervention,
-4. end the session and receive a transcript-derived recap,
-5. return for a second session where the companion recalls meaningful prior context,
-6. encounter at least one previously selected learning target naturally,
-7. generate analytics events for the entire funnel.
+1. open the app on a supported iOS or Android physical device,
+2. complete onboarding and grant microphone access,
+3. start a GPT-Live-1 conversation,
+4. speak for at least 10 minutes without developer intervention,
+5. end the session and receive a transcript-derived recap,
+6. return for a second session where meaningful prior context is remembered,
+7. encounter at least one selected learning target naturally,
+8. produce analytics for the complete mobile funnel,
+9. recover gracefully from common permission, network, and session failures.
 
 ## Product-quality threshold
 
-A technically functioning call is not enough. The live experience fails the MVP if users consistently describe it as a speaking test, lesson, interview, or chatbot Q&A.
+A technically functioning voice call is not enough. The experience fails if users mainly describe it as a speaking test, lesson, interview, or chatbot Q&A.
 
-The desired description is closer to: **"I was just talking, and I happened to be doing it in English."**
+The desired description is:
+
+> I was just talking, and I happened to be doing it in English.
