@@ -1,7 +1,7 @@
 # Roadmap
 
 Status: Canonical staged roadmap
-Date: 2026-09-14
+Date: 2026-09-15
 
 ## Phase 0 — Product foundation
 
@@ -13,9 +13,11 @@ Deliverables:
 - mobile MVP boundary,
 - mobile-first architecture,
 - validation metrics,
-- implementation backlog.
+- implementation backlog,
+- competitive baseline,
+- non-AI release-cost baseline.
 
-Exit condition: the product loop, mobile surface, and deferred scope are unambiguous.
+Exit condition: the product loop, mobile surface, deferred scope, competitive position, and cost assumptions are unambiguous.
 
 ## Phase 1 — Mobile voice spine
 
@@ -46,9 +48,10 @@ Build:
 - session summaries,
 - durable memory items,
 - recent-context retrieval,
-- continuity prompts.
+- continuity prompts,
+- initial relationship-state representation.
 
-Exit condition: returning users experience relevant memory without the companion overclaiming what it remembers.
+Exit condition: returning users experience relevant memory and recognizable relationship continuity without the companion overclaiming what it remembers.
 
 ## Phase 3 — Invisible learning loop
 
@@ -66,35 +69,56 @@ Build:
 
 Exit condition: at least one target introduced or modelled in an earlier session is naturally reused by testers in a later session.
 
-## Phase 4 — Mobile retention experiments
+## Phase 4 — Relationship and retention engine
 
-Goal: learn why users voluntarily reopen the app.
+Goal: create reasons to reopen the app that are stronger than "I should practice English."
 
 Test one dimension at a time:
 
 - relationship continuity,
+- unresolved conversational threads,
 - topic continuity,
 - mini story arcs,
-- notification/re-entry hooks,
+- persistent story/world state,
+- meaningful notification/re-entry hooks,
 - changing energy/style by context,
 - recap usefulness,
 - session length,
 - time-of-day use patterns.
 
-Exit condition: a small cohort repeatedly returns without depending on mandatory streak mechanics.
+Key constraint: these mechanisms must support healthy, user-controlled engagement. Do not optimize for manipulative dependency.
 
-## Phase 5 — Character and world expansion
+Exit condition: a small cohort repeatedly returns because they want to continue a conversation/relationship/story, without depending on mandatory streak mechanics.
 
-Only after the core loop retains users:
+## Phase 5 — Relationship-aware learning orchestration
+
+Goal: combine the retention engine and learner model into something conventional AI tutors do not provide.
+
+Build/test:
+
+- select language targets from longitudinal evidence,
+- place targets inside relevant relationship/story contexts,
+- generate natural opportunities for spontaneous production,
+- avoid forcing targets when they damage conversation quality,
+- use future callbacks to reinforce language across sessions,
+- measure whether modelled language later appears spontaneously in learner speech.
+
+Exit condition: repeated sessions show both voluntary return behavior and evidence that relationship/story contexts improve natural reuse of targeted language.
+
+## Phase 6 — Character and world expansion
+
+Only after the single-companion core loop retains users:
 
 - multiple recurring characters,
 - character relationships,
 - scenario packs,
 - interactive stories,
 - role-based contexts such as work, travel, and social life,
-- persistent narrative state.
+- richer persistent narrative state.
 
-## Phase 6 — Deeper learning system
+Do not treat character count as a growth strategy by itself.
+
+## Phase 7 — Deeper learning system
 
 Potential later capabilities:
 
@@ -105,9 +129,9 @@ Potential later capabilities:
 - proficiency milestones based on longitudinal evidence,
 - goal-specific modes such as interviews or travel.
 
-## Phase 7 — Monetization and release hardening
+## Phase 8 — Monetization and release hardening
 
-Do not lock pricing before measuring mobile usage and AI cost.
+Do not lock pricing before measuring mobile usage, AI cost, and retention.
 
 Potential variables:
 
@@ -123,10 +147,26 @@ Release work includes:
 - crash/reliability hardening,
 - privacy and account controls,
 - TestFlight/internal Android testing,
-- App Store and Google Play release preparation.
+- App Store and Google Play release preparation,
+- revalidation of current store fees and release costs.
 
 Any pricing model must preserve the central behavior: users should feel free to talk rather than ration every sentence.
 
+## Competitive checkpoints
+
+Before Phase 4, Phase 6, and public launch, refresh the market review for at minimum:
+
+- Langua,
+- Praktika,
+- Duolingo conversational features,
+- Speak,
+- Loora,
+- major AI companion products.
+
+Do not claim a feature is unique without a current check.
+
 ## Current priority
 
-**Build Phase 1 as a mobile app. Do not continue the browser UI as the primary product path. Do not begin world/character expansion before real-device voice is reliable and measurable.**
+**Build Phase 1 as a mobile app. Do not continue the browser UI as the primary product path. Do not begin broad world/character expansion before real-device voice is reliable and measurable.**
+
+At the same time, preserve the strategic direction: the long-term differentiator is not "AI voice tutor" but the combination of relationship/world continuity and invisible longitudinal learning.
